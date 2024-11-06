@@ -20,7 +20,6 @@ interface SideBarNavProps {
 export default function SideBarNav({ content, onClose }: SideBarNavProps) {
 
     const [sections, setSections] = useState<Section[]>([]);
-    const [activeSection, setActiveSection] = useState<string>('');
 
     useEffect(() => {
         // Split content into sections by headers
@@ -60,47 +59,6 @@ export default function SideBarNav({ content, onClose }: SideBarNavProps) {
         }
 
         setSections(extractedSections);
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                let maxVisibility = 0;
-                let mostVisibleSection = '';
-
-                entries.forEach((entry) => {
-                    const intersectionRatio = entry.intersectionRatio;
-                    if (intersectionRatio > maxVisibility) {
-                        maxVisibility = intersectionRatio;
-                        mostVisibleSection = entry.target.id;
-                    }
-                });
-
-                if (mostVisibleSection) {
-                    setActiveSection(mostVisibleSection);
-                }
-            },
-            {
-                rootMargin: '-100px 0px -66%',
-                threshold: Array.from({ length: 100 }, (_, i) => i / 100)
-            }
-        );
-
-        const observeElements = () => {
-            extractedSections.forEach(({ id }) => {
-                const element = document.getElementById(id);
-                if (element) observer.observe(element);
-            });
-        };
-
-        if (document.readyState === 'complete') {
-            observeElements();
-        } else {
-            window.addEventListener('load', observeElements);
-        }
-
-        return () => {
-            observer.disconnect();
-            window.removeEventListener('load', observeElements);
-        };
     }, [content]);
 
     return (
@@ -116,7 +74,6 @@ export default function SideBarNav({ content, onClose }: SideBarNavProps) {
             <div className="sticky top-20">
                 <nav className="space-y-1 pt-8 md:pt-0">
                     {sections.map((section, index) => {
-                        const isActive = section.id === activeSection;
 
                         return (
                             <div key={section.id} className="group">
@@ -128,19 +85,12 @@ export default function SideBarNav({ content, onClose }: SideBarNavProps) {
                                         >
                                             <a
                                                 href={`#${section.id}`}
-                                                className={`text-sm font-medium ${
-                                                    isActive
-                                                        ? 'text-violet-400'
-                                                        : 'text-gray-300 hover:text-violet-400'
-                                                }`}
+                                                className={`text-sm font-medium `}
                                             >
                                                 {section.title}
-                                                {isActive && (
-                                                    <span className="absolute -left-2 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-violet-400" />
-                                                )}
                                             </a>
                                             {section.subSections.length > 0 && (
-                                                <ChevronRight className={`h-4 w-4 text-gray-500 transition-transform ${isActive ? 'rotate-90' : ''}`} />
+                                                <ChevronRight className={`h-4 w-4 text-gray-500 transition-transform`} />
                                             )}
                                         </div>
                                     </CollapsibleTrigger>
@@ -149,21 +99,16 @@ export default function SideBarNav({ content, onClose }: SideBarNavProps) {
                                             <div className="ml-4 border-l border-violet-800">
                                                 {section.subSections.map((subSection, subIndex) => {
                                                     const subSectionId = subSection.toLowerCase().replace(/[^\w]+/g, '-');
-                                                    const isSubActive = subSectionId === activeSection;
+                                               
 
                                                     return (
                                                         <a
                                                             key={subIndex}
                                                             href={`#${subSectionId}`}
-                                                            className={`block px-3 py-1 text-sm transition-colors ${isSubActive
-                                                                    ? 'text-violet-400'
-                                                                    : 'text-gray-400 hover:text-violet-400'
-                                                                }`}
+                                                            className={`block px-3 py-1 text-sm transition-colors `}
                                                         >
                                                             {subSection}
-                                                            {isSubActive && (
-                                                                <span className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-violet-400" />
-                                                            )}
+                                             
                                                         </a>
                                                     );
                                                 })}

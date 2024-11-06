@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Copy, Check, Menu } from 'lucide-react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -15,6 +15,7 @@ interface DocViewerProps {
 export function DocViewer({ content }: DocViewerProps) {
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   const handleCopyCode = async (code: string) => {
     await navigator.clipboard.writeText(code);
@@ -35,7 +36,7 @@ export function DocViewer({ content }: DocViewerProps) {
       <div className="grid md:grid-cols-[240px_1fr] gap-8">
         {/* Sidebar */}
         <div className={`
-          fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:relative md:bg-transparent md:backdrop-blur-none
+          fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:sticky md:top-20 md:h-[calc(100vh-5rem)] md:bg-transparent md:backdrop-blur-none
           transform transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           md:transform-none md:translate-x-0
