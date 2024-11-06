@@ -3,6 +3,7 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import { X } from 'lucide-react';
 
 interface Section {
     id: string;
@@ -11,7 +12,12 @@ interface Section {
     subSections: string[];
 }
 
-export default function SideBarNav({ content }: { content: string }) {
+interface SideBarNavProps {
+    content: string;
+    onClose?: () => void;
+}
+
+export default function SideBarNav({ content, onClose }: SideBarNavProps) {
 
     const [sections, setSections] = useState<Section[]>([]);
     const [activeSection, setActiveSection] = useState<string>('');
@@ -99,8 +105,16 @@ export default function SideBarNav({ content }: { content: string }) {
 
     return (
         <div className="relative">
+            {/* Close button for mobile */}
+            <button
+                onClick={onClose}
+                className="absolute top-0 right-0 p-2 text-gray-400 hover:text-gray-200 md:hidden"
+            >
+                <X className="h-5 w-5" />
+            </button>
+
             <div className="sticky top-20">
-                <nav className="space-y-1">
+                <nav className="space-y-1 pt-8 md:pt-0">
                     {sections.map((section, index) => {
                         const isActive = section.id === activeSection;
 
@@ -108,13 +122,17 @@ export default function SideBarNav({ content }: { content: string }) {
                             <div key={section.id} className="group">
                                 <Collapsible>
                                     <CollapsibleTrigger asChild>
-                                        <div className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-violet-900/20 transition-colors">
+                                        <div 
+                                            className="flex items-center justify-between w-full py-2 px-3 rounded-md hover:bg-violet-900/20 transition-colors"
+                                            onClick={() => onClose?.()}
+                                        >
                                             <a
                                                 href={`#${section.id}`}
-                                                className={`text-sm font-medium ${isActive
+                                                className={`text-sm font-medium ${
+                                                    isActive
                                                         ? 'text-violet-400'
                                                         : 'text-gray-300 hover:text-violet-400'
-                                                    }`}
+                                                }`}
                                             >
                                                 {section.title}
                                                 {isActive && (

@@ -48,7 +48,7 @@ export function SearchForm({ onSubmit, isLoading }: SearchFormProps) {
                                 )
                             }
 
-                            <div id="filter-icon">
+                            <button type="submit" id="filter-icon">
                                 {
                                     isLoading ? (
                                         <ArrowUpRight className="h-5 w-5 inline text-violet-400 animate-ping bg-transparent" />
@@ -56,7 +56,7 @@ export function SearchForm({ onSubmit, isLoading }: SearchFormProps) {
                                         <ArrowUpRight className="h-5 w-5 inline text-violet-200 bg-transparent" />
                                     )
                                 }
-                            </div>
+                            </button>
                         </form>
                     </div>
                 </div>
